@@ -48,7 +48,7 @@ class Ui(Ui_MainWindow):
         self.zhangHaoInput.textChanged.connect(self.update_json_file)
         self.miMaInput.textChanged.connect(self.update_json_file)
 
-        self.fanKui.clicked.connect(lambda: QDesktopServices.openUrl(QUrl('https://docs.qq.com/doc/DT3JOYVJXb3VYSkJn')))
+        self.fanKui.clicked.connect(lambda: QDesktopServices.openUrl(QUrl('https://github.com/xx025/autolink/issues/new/choose')))
 
         self.baoChiHouTai.setVisible(False)
 
