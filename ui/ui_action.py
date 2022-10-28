@@ -11,6 +11,7 @@ import requests
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QDesktopServices
+from PyQt5.QtWidgets import QMessageBox
 
 from startup.set_start_up import set_startup, remove_startup, check_startup
 from ui.win_ui import Ui_MainWindow
@@ -90,14 +91,14 @@ class Ui(Ui_MainWindow):
         # 之前的配置会自动保存到文件 复制过来就行
 
         if os.path.exists(self.setting_file):
-
             try:
                 os.remove(self.setting_file)
             except:
                 print("error")
 
         r = copyfile(self.setting_path, self.setting_file)
-        print(r)
+        QMessageBox.information(QtWidgets.QMainWindow(), "导出完成",
+                             '请将配置文件和程序放在一块，复制到移动设备中', QMessageBox.Yes)
 
     def create_setting_json(self):
 
