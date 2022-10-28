@@ -62,6 +62,9 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.addWidget(self.dengLuZhuangTai)
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem1)
+        self.shengChengPeiZhi = QtWidgets.QPushButton(self.verticalLayoutWidget)
+        self.shengChengPeiZhi.setObjectName("shengChengPeiZhi")
+        self.horizontalLayout_2.addWidget(self.shengChengPeiZhi)
         self.dengLuBtn = QtWidgets.QPushButton(self.verticalLayoutWidget)
         self.dengLuBtn.setObjectName("dengLuBtn")
         self.horizontalLayout_2.addWidget(self.dengLuBtn)
@@ -90,6 +93,8 @@ class Ui_MainWindow(object):
         self.zuoZhe = QtWidgets.QLabel(self.verticalLayoutWidget)
         self.zuoZhe.setObjectName("zuoZhe")
         self.horizontalLayout_3.addWidget(self.zuoZhe)
+        spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem3)
         self.fanKui = QtWidgets.QPushButton(self.verticalLayoutWidget)
         self.fanKui.setObjectName("fanKui")
         self.horizontalLayout_3.addWidget(self.fanKui)
@@ -104,11 +109,12 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "校园网自动登录认证"))
-        self.label_3.setText(_translate("MainWindow", "校园网自动登录认证"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.label_3.setText(_translate("MainWindow", "Ybu校园网自动登录认证"))
         self.zhangHaoText.setText(_translate("MainWindow", "账号"))
         self.miMaText.setText(_translate("MainWindow", "密码"))
         self.dengLuZhuangTai.setText(_translate("MainWindow", "已登陆"))
+        self.shengChengPeiZhi.setText(_translate("MainWindow", "生成配置"))
         self.dengLuBtn.setText(_translate("MainWindow", "登录"))
         self.kaiJiQiDong.setText(_translate("MainWindow", "开机启动"))
         self.baoChiHouTai.setText(_translate("MainWindow", "保持后台"))
@@ -116,7 +122,7 @@ class Ui_MainWindow(object):
         self.textBrowser.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'楷体\',\'宋体\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'楷体\'; font-size:9pt;\"><br /></p></body></html>"))
+"</style></head><body style=\" font-family:\'楷体\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:9pt;\"><br /></p></body></html>"))
         self.zuoZhe.setText(_translate("MainWindow", "By:Github/xx025"))
-        self.fanKui.setText(_translate("MainWindow", "联系作者反馈"))
+        self.fanKui.setText(_translate("MainWindow", "反馈"))
