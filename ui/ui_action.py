@@ -5,6 +5,7 @@ import datetime
 import json
 import os
 import re
+from shutil import copyfile
 
 import requests
 from PyQt5 import QtWidgets
@@ -21,7 +22,9 @@ class Ui(Ui_MainWindow):
 
         self.name = '校园网自动连接'
 
-        self.setting_path = os.path.join(os.getenv("APPDATA"), 'xiaoyuanwangsetting.json')
+        self.setting_file = 'xiaoyuanwangsetting.json'
+
+        self.setting_path = '' + self.setting_file
 
         self.input_count = 0
         self.json_file = {
@@ -39,6 +42,8 @@ class Ui(Ui_MainWindow):
         self.dengLuBtn.clicked.connect(self.check_login)
         # 登录按钮
 
+        self.shengChengPeiZhi.clicked.connect(self.save_setting)
+
         self.kaiJiQiDong.setChecked(check_startup(self.name))
         # 先设置初始化状态，再绑定事件
         self.kaiJiQiDong.stateChanged.connect(self.she_zhi_zi_qi)
@@ -48,7 +53,8 @@ class Ui(Ui_MainWindow):
         self.zhangHaoInput.textChanged.connect(self.update_json_file)
         self.miMaInput.textChanged.connect(self.update_json_file)
 
-        self.fanKui.clicked.connect(lambda: QDesktopServices.openUrl(QUrl('https://github.com/xx025/autolink/issues/new/choose')))
+        self.fanKui.clicked.connect(
+            lambda: QDesktopServices.openUrl(QUrl('https://github.com/xx025/autolink/issues/new/choose')))
 
         self.baoChiHouTai.setVisible(False)
 
@@ -79,6 +85,20 @@ class Ui(Ui_MainWindow):
             if remove_startup(name=name):
                 self.textBrowser.append('取消开机启动')
 
+    def save_setting(self):
+        # 生成配置
+        # 之前的配置会自动保存到文件 复制过来就行
+
+        if os.path.exists(self.setting_file):
+
+            try:
+                os.remove(self.setting_file)
+            except:
+                print("error")
+
+        r = copyfile(self.setting_path, self.setting_file)
+        print(r)
+
     def create_setting_json(self):
 
         json_file = self.json_file
@@ -86,10 +106,15 @@ class Ui(Ui_MainWindow):
             json.dump(json_file, f, indent=4)
 
     def get_local_setting(self):
-        if not os.path.exists(self.setting_path):
-            self.create_setting_json()
+        if os.path.exists(self.setting_path):
+            self.setting_path = self.setting_path
+        else:
+            self.setting_path = os.path.join(os.getenv("APPDATA"), self.setting_path)
+            if not os.path.exists(self.setting_path):
+                self.create_setting_json()
 
-        json_file = json.load(open(self.setting_path, 'r'))
+        with open(self.setting_path, 'r') as f:
+            json_file = json.load(f)
 
         self.miMaInput.setText(json_file['miMa'])
         self.zhangHaoInput.setText(json_file['zhangHao'])
