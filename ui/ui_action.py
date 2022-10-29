@@ -5,7 +5,6 @@ import datetime
 import json
 import os
 import re
-from shutil import copyfile
 
 import requests
 from PyQt5 import QtWidgets
@@ -88,19 +87,11 @@ class Ui(Ui_MainWindow):
 
     def save_setting(self):
         # 生成配置
-        # 之前的配置会自动保存到文件 复制过来就行
-
-        if self.setting_file != self.setting_path:
-
-            if os.path.exists(self.setting_file):
-                try:
-                    os.remove(self.setting_file)
-                except:
-                    print("error")
-
-            r = copyfile(self.setting_path, self.setting_file)
-            QMessageBox.information(QtWidgets.QMainWindow(), "导出完成",
-                                    '请将配置文件和程序放在一块，复制到移动设备中', QMessageBox.Yes)
+        json_file = self.json_file
+        with open(self.setting_file, 'w') as f:
+            json.dump(json_file, f, indent=4)
+        QMessageBox.information(QtWidgets.QMainWindow(), "导出完成",
+                                '请将配置文件和程序放在一块，复制到移动设备中', QMessageBox.Yes)
 
     def create_setting_json(self):
 
