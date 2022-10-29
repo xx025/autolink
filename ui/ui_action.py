@@ -90,15 +90,17 @@ class Ui(Ui_MainWindow):
         # 生成配置
         # 之前的配置会自动保存到文件 复制过来就行
 
-        if os.path.exists(self.setting_file):
-            try:
-                os.remove(self.setting_file)
-            except:
-                print("error")
+        if self.setting_file != self.setting_path:
 
-        r = copyfile(self.setting_path, self.setting_file)
-        QMessageBox.information(QtWidgets.QMainWindow(), "导出完成",
-                             '请将配置文件和程序放在一块，复制到移动设备中', QMessageBox.Yes)
+            if os.path.exists(self.setting_file):
+                try:
+                    os.remove(self.setting_file)
+                except:
+                    print("error")
+
+            r = copyfile(self.setting_path, self.setting_file)
+            QMessageBox.information(QtWidgets.QMainWindow(), "导出完成",
+                                    '请将配置文件和程序放在一块，复制到移动设备中', QMessageBox.Yes)
 
     def create_setting_json(self):
 
