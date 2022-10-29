@@ -5,6 +5,7 @@ import datetime
 import json
 import os
 import re
+from copy import copy
 
 import requests
 from PyQt5 import QtWidgets
@@ -87,7 +88,8 @@ class Ui(Ui_MainWindow):
 
     def save_setting(self):
         # 生成配置
-        json_file = self.json_file
+        json_file = copy(self.json_file)
+        json_file['kaiJiQiDong'] = False
         with open(self.setting_file, 'w') as f:
             json.dump(json_file, f, indent=4)
         QMessageBox.information(QtWidgets.QMainWindow(), "导出完成",
@@ -115,6 +117,10 @@ class Ui(Ui_MainWindow):
         self.kaiJiQiDong.setChecked(json_file['kaiJiQiDong'])
         self.baoChiHouTai.setChecked(json_file["baoChiHouTai"])
         self.ziDongRenZheng.setChecked(json_file['ziDongRenZheng'])
+
+        if self.setting_path == self.setting_file:
+            # 如果使用相对路径当前目录导出文件不可用
+            self.shengChengPeiZhi.setVisible(False)
 
     def update_json_file(self):
         self.json_file['zhangHao'] = self.zhangHaoInput.text()
