@@ -3,9 +3,7 @@ from __future__ import print_function
 import base64
 import datetime
 import json
-import os
 import re
-from copy import copy
 
 import requests
 from PyQt5 import QtWidgets
@@ -13,6 +11,7 @@ from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtWidgets import QMessageBox
 
+from setting_file.load_setting_file import Setting
 from startup.set_start_up import set_startup, remove_startup, check_startup
 from ui.win_ui import Ui_MainWindow
 
@@ -23,10 +22,6 @@ class Ui(Ui_MainWindow):
 
         self.name = '校园网自动连接'
 
-        self.setting_file = 'xiaoyuanwangsetting.json'
-
-        self.setting_path = '' + self.setting_file
-
         self.input_count = 0
         self.json_file = {
             "zhangHao": "",
@@ -35,6 +30,9 @@ class Ui(Ui_MainWindow):
             "ziDongRenZheng": True,
             "kaiJiQiDong": True
         }
+
+        self.setting = Setting(json_file=self.json_file)
+        self.setting_abs, self.json_file = self.setting.read_setting_file()
 
     def init_ui(self):
         self.miMaInput.setEchoMode(QtWidgets.QLineEdit.Password)
@@ -50,10 +48,6 @@ class Ui(Ui_MainWindow):
         self.kaiJiQiDong.stateChanged.connect(self.she_zhi_zi_qi)
         # 开机自启复选框 绑定事件
 
-        self.ziDongRenZheng.stateChanged.connect(self.update_json_file)
-        self.zhangHaoInput.textChanged.connect(self.update_json_file)
-        self.miMaInput.textChanged.connect(self.update_json_file)
-
         self.fanKui.clicked.connect(
             lambda: QDesktopServices.openUrl(QUrl('https://github.com/xx025/autolink/issues/new/choose')))
 
@@ -63,6 +57,11 @@ class Ui(Ui_MainWindow):
 
         self.get_local_setting()
         # 加载本地配置文件
+
+        # 事件触发绑定 设置在加载配置文件之后 否则 设置的同时 会触发更新
+        self.ziDongRenZheng.stateChanged.connect(self.update_json_file)
+        self.zhangHaoInput.textChanged.connect(self.update_json_file)
+        self.miMaInput.textChanged.connect(self.update_json_file)
 
         if self.ziDongRenZheng.isChecked():
             self.check_login()
@@ -88,39 +87,18 @@ class Ui(Ui_MainWindow):
 
     def save_setting(self):
         # 生成配置
-        json_file = copy(self.json_file)
-        json_file['kaiJiQiDong'] = False
-        with open(self.setting_file, 'w') as f:
-            json.dump(json_file, f, indent=4)
+        pass
         QMessageBox.information(QtWidgets.QMainWindow(), "导出完成",
                                 '请将配置文件和程序放在一块，复制到移动设备中', QMessageBox.Yes)
 
-    def create_setting_json(self):
-
-        json_file = self.json_file
-        with open(self.setting_path, 'w') as f:
-            json.dump(json_file, f, indent=4)
-
     def get_local_setting(self):
-        if os.path.exists(self.setting_path):
-            self.setting_path = self.setting_path
-        else:
-            self.setting_path = os.path.join(os.getenv("APPDATA"), self.setting_path)
-            if not os.path.exists(self.setting_path):
-                self.create_setting_json()
-
-        with open(self.setting_path, 'r') as f:
-            json_file = json.load(f)
-
-        self.miMaInput.setText(json_file['miMa'])
-        self.zhangHaoInput.setText(json_file['zhangHao'])
-        self.kaiJiQiDong.setChecked(json_file['kaiJiQiDong'])
-        self.baoChiHouTai.setChecked(json_file["baoChiHouTai"])
-        self.ziDongRenZheng.setChecked(json_file['ziDongRenZheng'])
-
-        if self.setting_path == self.setting_file:
-            # 如果使用相对路径当前目录导出文件不可用
-            self.shengChengPeiZhi.setVisible(False)
+        self.zhangHaoInput.setText(self.json_file['zhangHao'])
+        self.miMaInput.setText(self.json_file['miMa'])
+        self.baoChiHouTai.setChecked(self.json_file["baoChiHouTai"])
+        self.ziDongRenZheng.setChecked(self.json_file['ziDongRenZheng'])
+        self.kaiJiQiDong.setChecked(self.json_file['kaiJiQiDong'])
+        self.shengChengPeiZhi.setVisible(self.setting_abs)
+        # 如果路径为绝对路径则显示导出按钮
 
     def update_json_file(self):
         self.json_file['zhangHao'] = self.zhangHaoInput.text()
@@ -128,10 +106,7 @@ class Ui(Ui_MainWindow):
         self.json_file["baoChiHouTai"] = self.baoChiHouTai.isChecked()
         self.json_file['ziDongRenZheng'] = self.ziDongRenZheng.isChecked()
         self.json_file['kaiJiQiDong'] = self.kaiJiQiDong.isChecked()
-
-        json_file = self.json_file
-        with open(self.setting_path, 'w') as f:
-            json.dump(json_file, f, indent=4)
+        self.setting.save_setting_file(json_file=self.json_file)
 
     def deng_lu(self):
 
