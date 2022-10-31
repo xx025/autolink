@@ -61,6 +61,11 @@ class Setting:
         :param json_file: 新的配置文件
         :return:
         """
-        print(json_file)
         with open(self.setting_path, 'w') as f:
+            json.dump(json_file, f, indent=4)
+
+
+
+    def generate_file(self,json_file):
+        with open(self.setting_file,'w') as f:
             json.dump(json_file, f, indent=4)
