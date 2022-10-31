@@ -87,7 +87,7 @@ class Ui(Ui_MainWindow):
 
     def save_setting(self):
         # 生成配置
-        pass
+        self.setting.generate_file(json_file=self.json_file)
         QMessageBox.information(QtWidgets.QMainWindow(), "导出完成",
                                 '请将配置文件和程序放在一块，复制到移动设备中', QMessageBox.Yes)
 
