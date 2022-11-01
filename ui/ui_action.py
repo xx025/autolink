@@ -6,13 +6,13 @@ import json
 import re
 
 import requests
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QDesktopServices
-from PyQt5.QtWidgets import QMessageBox
 
 from setting_file.load_setting_file import Setting
 from startup.set_start_up import set_startup, remove_startup, check_startup
+from ui.timetag import time2
 from ui.win_ui import Ui_MainWindow
 
 
@@ -37,6 +37,10 @@ class Ui(Ui_MainWindow):
     def init_ui(self):
         self.miMaInput.setEchoMode(QtWidgets.QLineEdit.Password)
         # self.zhangHaoInput.setEchoMode(QtWidgets.QLineEdit.Password)
+
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.textBrowser.setFont(font)
 
         self.dengLuBtn.clicked.connect(self.check_login)
         # 登录按钮
@@ -88,8 +92,8 @@ class Ui(Ui_MainWindow):
     def save_setting(self):
         # 生成配置
         self.setting.generate_file(json_file=self.json_file)
-        QMessageBox.information(QtWidgets.QMainWindow(), "导出完成",
-                                '请将配置文件和程序放在一块，复制到移动设备中', QMessageBox.Yes)
+
+        self.textBrowser.append(f'{time2()}:{"导出完成"},{"请将配置文件和程序放在一块，复制到移动设备中"}')
 
     def get_local_setting(self):
         self.zhangHaoInput.setText(self.json_file['zhangHao'])
@@ -157,7 +161,7 @@ class Ui(Ui_MainWindow):
                         mseg = base64.b64decode(mseg)
                     except Exception as e:
                         mseg = "解码出错"
-            self.textBrowser.append(f'{datetime.datetime.now()}:{mseg}')
+            self.textBrowser.append(f'{time2()}:{mseg}')
         else:
 
             print(res)
@@ -166,7 +170,7 @@ class Ui(Ui_MainWindow):
         import bs4
         import requests
 
-        self.textBrowser.append(f'{datetime.datetime.now()}:检查登录状态')
+        self.textBrowser.append(f'{time2()}:检查登录状态')
 
         header = {"Accept-Encoding": "gzip, deflate",
                   "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
@@ -179,7 +183,7 @@ class Ui(Ui_MainWindow):
 
         if title_text == '上网登录页':
             info = '未认证登录，正在登录'
-            self.textBrowser.append(f'{datetime.datetime.now()}:{info}')
+            self.textBrowser.append(f'{time2()}:{info}')
 
             self.deng_lu()
         else:
@@ -188,4 +192,4 @@ class Ui(Ui_MainWindow):
                 info = '已经认证登录'
             else:
                 info = '未知状态'
-            self.textBrowser.append(f'{datetime.datetime.now()}:{info}')
+            self.textBrowser.append(f'{time2()}:{info}')
