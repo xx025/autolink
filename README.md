@@ -10,6 +10,11 @@
 - 🥡可将配置文件导出到移动设备，在另一台电脑上复制程序和配置文件也能一键登录
 
 
+
+**打包**
+```shell
+pyinstaller -F main.py -w
+```
 ![img_2.png](imgs/img_2.png)
 
 
