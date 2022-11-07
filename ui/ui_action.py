@@ -4,12 +4,14 @@ import base64
 import datetime
 import json
 import re
+from copy import deepcopy
 
 import requests
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QDesktopServices
 
+from dectry import dectry, enctry
 from setting_file.load_setting_file import Setting
 from startup.set_start_up import set_startup, remove_startup, check_startup
 from ui.timetag import time2
@@ -33,6 +35,10 @@ class Ui(Ui_MainWindow):
 
         self.setting = Setting(json_file=self.json_file)
         self.setting_abs, self.json_file = self.setting.read_setting_file()
+
+        self.json_file['miMa'] = dectry(self.json_file['miMa'])
+        # 加载本地文件后对密码进行解密
+
 
     def init_ui(self):
         self.miMaInput.setEchoMode(QtWidgets.QLineEdit.Password)
@@ -110,14 +116,22 @@ class Ui(Ui_MainWindow):
         self.json_file["baoChiHouTai"] = self.baoChiHouTai.isChecked()
         self.json_file['ziDongRenZheng'] = self.ziDongRenZheng.isChecked()
         self.json_file['kaiJiQiDong'] = self.kaiJiQiDong.isChecked()
-        self.setting.save_setting_file(json_file=self.json_file)
+
+        enctry_json_file = deepcopy(self.json_file)
+        enctry_json_file['miMa'] = enctry(enctry_json_file['miMa'])
+        # 拷贝一份 self.json_file 并对密码进行加密
+        # 将拷贝修改后的json 对象，作为存储的对象，
+        # 进而保存加密后的密码，而不影响全局self.json_file
+        self.setting.save_setting_file(json_file=enctry_json_file)
 
     def deng_lu(self):
 
-        self.textBrowser.append(f'{datetime.datetime.now()}:尝试登录')
+        self.textBrowser.append(f'{time2()}:尝试登录')
 
-        user_account = self.zhangHaoInput.text()
-        user_password = self.miMaInput.text()
+        user_account = self.json_file['zhangHao']
+        user_password = self.json_file['miMa']
+
+        print(user_account, user_password)
 
         header = {"Accept-Encoding": "gzip, deflate",
                   "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
